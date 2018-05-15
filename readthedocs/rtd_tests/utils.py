@@ -16,6 +16,19 @@ from django.contrib.auth.models import User
 log = logging.getLogger(__name__)
 
 
+def get_readthedocs_app_path():
+    """
+    Return the absolute path of the ``readthedocs`` app.
+    """
+    path = getcwd()
+    if path.endswith('readthedocsinc'):
+        # readthedocs-corporate
+        path = pjoin(path, '..', '..', 'readthedocs.org', 'readthedocs')
+        return path
+
+    return path
+
+
 def check_output(l, env=()):
     if env == ():
         output = subprocess.Popen(l, stdout=subprocess.PIPE).communicate()[0]
@@ -27,7 +40,7 @@ def check_output(l, env=()):
 
 def make_test_git():
     directory = mkdtemp()
-    path = getcwd()
+    path = get_readthedocs_app_path()
     sample = abspath(pjoin(path, 'rtd_tests/fixtures/sample_repo'))
     directory = pjoin(directory, 'sample_repo')
     copytree(sample, directory)
@@ -95,7 +108,7 @@ def make_test_git():
 
 def make_test_hg():
     directory = mkdtemp()
-    path = getcwd()
+    path = get_readthedocs_app_path()
     sample = abspath(pjoin(path, 'rtd_tests/fixtures/sample_repo'))
     directory = pjoin(directory, 'sample_repo')
     copytree(sample, directory)
